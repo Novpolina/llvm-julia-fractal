@@ -7,3 +7,6 @@ preview-dump
 preview.ppm
 *.o
 *.bc
+build/
+__pycache__/
+*.so

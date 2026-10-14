@@ -1,0 +1,10 @@
+{
+  "events": 96020274,
+  "windows": [
+    {"length": 1, "total": 96020274, "unique": 37},
+    {"length": 2, "total": 96020273, "unique": 84},
+    {"length": 3, "total": 96020272, "unique": 110},
+    {"length": 4, "total": 96020271, "unique": 124},
+    {"length": 5, "total": 96020270, "unique": 136}
+  ]
+}

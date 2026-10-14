@@ -75,3 +75,42 @@ tests/headless_sim.c  smoke-тест без SDL
 tests/frame_dump.c    сохранение первого кадра без SDL
 Makefile               команды сборки и генерации IR
 ```
+
+## Задание №2: динамическая трасса LLVM Pass
+
+Продолжение задания №1 на том же `app.c`: инструментирование уже
+оптимизированного IR на `-O2` и `-Os`, рантайм-трасса `User <- Operand`
+и анализ скользящих окон длиной 1–5. Задание со звёздочкой выполнено:
+User `phi` пропускается, операнд `phi` рекурсивно раскрывается во все
+входящие инструкции, с защитой от циклов.
+
+Для Ubuntu/WSL нужны согласованные версии Clang, opt и llvm-config,
+заголовки LLVM, SDL2 и zlib. Проверено на LLVM 18.1.3:
+
+```bash
+sudo apt install clang-18 llvm-18-dev libsdl2-dev zlib1g-dev make python3
+make trace-test LLVM_CONFIG=llvm-config-18
+make trace LLVM_CONFIG=llvm-config-18 TRACE_FRAMES=2
+make trace-analysis LLVM_CONFIG=llvm-config-18
+```
+
+`make trace` запускает приложение через SDL2 и штатный `sim.c`, собирает
+два полных кадра, сохраняет трассы и контрольные суммы. Для запуска без
+дисплея предусмотрен `make trace-headless`. Pass обрабатывает только
+модуль `app.c`; графическая библиотека и логгер не инструментируются.
+
+Результаты и интерпретация: [statistics/README.md](statistics/README.md).
+Полные трассы сжаты gzip без потерь; текстовые примеры лежат рядом.
+Вывести записи в исходном порядке:
+
+```bash
+python3 tools/decode_trace.py statistics/O2 --limit 40
+python3 tools/decode_trace.py statistics/Os --kind instructions --limit 40
+# Без --limit выводится вся трасса.
+```
+
+Код: [pass/UseTracePass.cpp](pass/UseTracePass.cpp),
+[pass/trace_runtime.c](pass/trace_runtime.c).
+Тесты проверяют рантайм-ветвление, раскрытие вложенных/циклических phi,
+повторные операнды, фильтр app.c, повторное применение Pass, частоты окон
+и совпадение результатов с неинструментированной сборкой.

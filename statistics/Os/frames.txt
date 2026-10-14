@@ -1,0 +1,2 @@
+frame=0 pixels=294912 fnv1a64=44e864e95e2f7ccd
+frame=1 pixels=294912 fnv1a64=3b20f8e09c974d59

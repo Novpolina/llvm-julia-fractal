@@ -38,3 +38,5 @@ preview: preview-dump
 
 clean:
 	rm -f julia julia-ir headless-test headless-ubsan preview-dump preview.ppm app_O2.ll app_Os.ll
+
+include pass/targets.mk
